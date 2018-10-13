@@ -1,0 +1,36 @@
+{
+    "tags-dir": [
+        "./components/own",
+        "./components/vendor/awly",
+        "./components/vendor/markojs"
+    ],
+
+    "<script>": {
+        "transformer": "./hooks/vendor/awly/inline-js-transformer.js"
+    },
+    "<style>": {
+        "transformer": "./hooks/vendor/awly/inline-css-transformer.js"
+    },
+    "<svg>": {
+        "transformer": "./hooks/vendor/awly/inline-svg-transformer.js"
+    },
+    "<*>": {
+        "transformer": "./hooks/vendor/awly/show-only-in-stage-transformer.js"
+    },
+
+    "<app-base64>": {
+        "renderer": "./hooks/vendor/markojs/base64-tag.js",
+        "@path": "string",
+        "@var": "var",
+        "var": {
+            "name-from-attribute": "var"
+        }
+    },
+    "<img>": {
+        "transformer": "./hooks/vendor/markojs/img-transformer.js"
+    },
+    "<*>": {
+        "@repeat": "integer",
+        "transformer": "./hooks/vendor/markojs/repeat-transformer.js"
+    }
+}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title><include(data.title)/></title>
+
+    <style inline-css="/assets/css/normalize.css"></style>
+    <style inline-css="/assets/css/system-fonts.css"></style>
+
+    $!{out.global.injectCSS}
+</head>
+<body.body>
+    <include(data.body)/>
+
+    $!{out.global.injectJS}
+
+    <awly-hot-reload show-only-in-stage("dev") />
+</body>
+</html>
