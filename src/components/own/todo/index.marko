@@ -7,7 +7,8 @@ class {
 
     addTodoOnEnter(event, input){
         if(event.keyCode === 13){
-            console.log("add todo", event, input.value);
+            this.state.todos = this.state.todos.concat(input.value);
+            input.value = "";
         }
     }
 }
