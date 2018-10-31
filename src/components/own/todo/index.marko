@@ -1,4 +1,10 @@
 class {
+    onCreate(){
+        this.state = {
+            todos: ['Buy milk', 'Clean the house', 'Walk the dog']
+        };
+    }
+
     addTodoOnEnter(event, input){
         if(event.keyCode === 13){
             console.log("add todo", event, input.value);
@@ -11,5 +17,11 @@ class {
         <input type="text"
                placeholder="What needs to be done?"
                on-keypress("addTodoOnEnter") />
+    </div>
+
+    <div.todo__list>
+        <for(todo in state.todos)>
+            <div.todo__item>${todo}</div>
+        </for>
     </div>
 </div>
