@@ -10,7 +10,8 @@ class {
             },{
                 text: 'Walk the dog',
                 completed: false
-            }]
+            }],
+            showTodosState: 'all'
         };
     }
 
@@ -25,6 +26,20 @@ class {
         todo.completed = input.checked;
         this.setStateDirty('todos');
     }
+
+    setShowTodosState(todoState, event){
+        this.state.showTodosState = todoState;
+    }
+
+    filterFn(todos){
+        if (this.state.showTodosState == 'active') {
+            return todos.filter(todo => todo.completed === false);
+        } else if (this.state.showTodosState == 'completed') {
+            return todos.filter(todo => todo.completed === true);
+        } else {
+            return todos;
+        }
+    }
 }
 
 <div.todo>
@@ -35,7 +50,7 @@ class {
     </div>
 
     <div.todo__list>
-        <for(todo in state.todos)>
+        <for(todo in component.filterFn(state.todos))>
             <div.todo__item class="${todo.completed ? 'todo__item--completed' : ''}">
                 <label.todo__item-checkbox>
                     <input type="checkbox"
@@ -47,11 +62,17 @@ class {
         </for>
     </div>
     <div.todo__footer>
-        ${state.todos.length} ${state.todos.length === 1 ? 'item' : 'items'} left
+        <div.todo__count>${state.todos.length} ${state.todos.length === 1 ? 'item' : 'items'} left</div>
+        <div.todo__filters>
+            <span.todo__filter-btn on-click("setShowTodosState", "all")>All</span>
+            <span.todo__filter-btn on-click("setShowTodosState", "active")>Active</span>
+            <span.todo__filter-btn on-click("setShowTodosState", "completed")>Completed</span>
+        </div>
     </div>
 </div>
 
 style.scss {
+    $color-dark-gray: #777777;
     $color-gray: #4d4d4d;
     $color-light-gray: #e6e6e6;
 
@@ -142,11 +163,35 @@ style.scss {
             }
         }
 
+        &__count {
+            float: left;
+        }
+
+        &__filters {
+            position: absolute;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+
+        &__filter-btn {
+            border: 1px solid rgba(175, 47, 47, 0.2);
+            border-radius: 4px;
+            margin: 3px;
+            padding: 3px 7px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
         &__footer {
+            position: relative;
+            height: 20px;
             padding: 10px 15px;
             background-color: white;
             font-size: 14px;
+            color: $color-dark-gray;
             border-top: 1px solid $color-light-gray;
+            line-height: 1.5;
         }
     }
 }
