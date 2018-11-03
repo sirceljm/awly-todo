@@ -38,7 +38,7 @@ class {
         this.state.showTodosState = todoState;
     }
 
-    filterFn(todos, todoState){
+    filterTodos(todos, todoState){
         if (todoState == 'active') {
             return todos.filter(todo => todo.completed === false);
         } else if (todoState == 'completed') {
@@ -46,6 +46,26 @@ class {
         } else {
             return todos;
         }
+    }
+
+    removeTodo(todoId, event){
+        const todo = this.state.todos.find(
+            item => item.id === todoId
+        );
+
+        const todoPos = this.state.todos.indexOf(todo);
+        this.state.todos.splice(todoPos, 1);
+
+        this.setStateDirty('todos');
+    }
+
+    clearCompleted(){
+        for(let i = this.state.todos.length-1; i >= 0 ; i--){
+            if(this.state.todos[i].completed === true){
+                this.state.todos.splice(i, 1);
+            }
+        }
+        this.setStateDirty('todos');
     }
 }
 
@@ -57,7 +77,7 @@ class {
     </div>
 
     <div.todo__list>
-        <for(todo in component.filterFn(state.todos, state.showTodosState))>
+        <for(todo in component.filterTodos(state.todos, state.showTodosState))>
             <div.todo__item class="${todo.completed ? 'todo__item--completed' : ''}">
                 <label.todo__item-checkbox>
                     <input type="checkbox"
@@ -65,17 +85,19 @@ class {
                            on-change("toggleTodoStatus", todo) />
                 </label>
                 <span.todo__item-text>${todo.text}</span>
+                <span.todo__item-remove on-click("removeTodo", todo.id)>×</span>
             </div>
         </for>
     </div>
     <div.todo__footer>
-        $ var todosLeft = component.filterFn(state.todos, 'active').length;
+        $ const todosLeft = component.filterTodos(state.todos, 'active').length;
         <div.todo__count>${todosLeft} ${todosLeft === 1 ? 'item' : 'items'} left</div>
         <div.todo__filters>
             <span.todo__filter-btn on-click("setShowTodosState", "all")>All</span>
             <span.todo__filter-btn on-click("setShowTodosState", "active")>Active</span>
             <span.todo__filter-btn on-click("setShowTodosState", "completed")>Completed</span>
         </div>
+        <div.todo__clear on-click("clearCompleted")>Clear completed</div>
     </div>
 </div>
 
@@ -83,6 +105,8 @@ style.scss {
     $color-dark-gray: #777777;
     $color-gray: #4d4d4d;
     $color-light-gray: #e6e6e6;
+    $color-light-red: #cc9a9a;
+    $color-red: #af5b5e;
 
     .todo {
         width: 100%;
@@ -145,6 +169,32 @@ style.scss {
             background-color: white;
             font-size: 24px;
             border-top: 1px solid $color-light-gray;
+            position: relative;
+
+            &:hover {
+                .todo__item-remove {
+                    display: inline-block;
+                }
+            }
+
+            &-text {
+                color: $color-gray;
+            }
+
+            &-remove {
+                display: none;
+                position: absolute;
+                right: 0;
+                padding: 10px 20px;
+                margin: -10px 0px;
+                line-height: 1.5;
+                cursor: pointer;
+                color: $color-light-red;
+
+                &:hover {
+                    color: $color-red;
+                }
+            }
 
             &--completed {
                 .todo__item-text {
@@ -191,6 +241,17 @@ style.scss {
             padding: 3px 7px;
             font-size: 14px;
             cursor: pointer;
+        }
+
+        &__clear {
+            float: right;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+
+            &:hover {
+                text-decoration: underline;
+            }
         }
 
         &__footer {
