@@ -22,6 +22,7 @@ class {
     addTodoOnEnter(event, input){
         if(event.keyCode === 13){
             this.state.todos = this.state.todos.concat({
+                id: ++this.state.lastTodoId,
                 text: input.value,
                 completed: false
             });
@@ -93,9 +94,15 @@ class {
         $ const todosLeft = component.filterTodos(state.todos, 'active').length;
         <div.todo__count>${todosLeft} ${todosLeft === 1 ? 'item' : 'items'} left</div>
         <div.todo__filters>
-            <span.todo__filter-btn on-click("setShowTodosState", "all")>All</span>
-            <span.todo__filter-btn on-click("setShowTodosState", "active")>Active</span>
-            <span.todo__filter-btn on-click("setShowTodosState", "completed")>Completed</span>
+            <span.todo__filter-btn
+                class=(state.showTodosState === "all" ? "active-filter" : "")
+                on-click("setShowTodosState", "all")>All</span>
+            <span.todo__filter-btn
+                class=(state.showTodosState === "active" ? "active-filter" : "")
+                on-click("setShowTodosState", "active")>Active</span>
+            <span.todo__filter-btn
+                class=(state.showTodosState === "completed" ? "active-filter" : "")
+                on-click("setShowTodosState", "completed")>Completed</span>
         </div>
         <div.todo__clear on-click("clearCompleted")>Clear completed</div>
     </div>
@@ -235,12 +242,24 @@ style.scss {
         }
 
         &__filter-btn {
-            border: 1px solid rgba(175, 47, 47, 0.2);
             border-radius: 4px;
             margin: 3px;
             padding: 3px 7px;
             font-size: 14px;
             cursor: pointer;
+            box-sizing: border-box;
+
+            &:hover {
+                border: 1px solid rgba(175, 47, 47, 0.1);
+                margin-left: 2px;
+                margin-right: 2px;
+            }
+
+            &.active-filter {
+                border: 1px solid rgba(175, 47, 47, 0.2);
+                margin-left: 2px;
+                margin-right: 2px;
+            }
         }
 
         &__clear {
