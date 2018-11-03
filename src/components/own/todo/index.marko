@@ -2,22 +2,29 @@ class {
     onCreate(){
         this.state = {
             todos: [{
+                id: 0,
                 text: 'Buy milk',
                 completed: true
             },{
+                id: 1,
                 text: 'Clean the house',
                 completed: false
             },{
+                id: 2,
                 text: 'Walk the dog',
                 completed: false
             }],
+            lastTodoId: 2,
             showTodosState: 'all'
         };
     }
 
     addTodoOnEnter(event, input){
         if(event.keyCode === 13){
-            this.state.todos = this.state.todos.concat(input.value);
+            this.state.todos = this.state.todos.concat({
+                text: input.value,
+                completed: false
+            });
             input.value = "";
         }
     }
@@ -31,10 +38,10 @@ class {
         this.state.showTodosState = todoState;
     }
 
-    filterFn(todos){
-        if (this.state.showTodosState == 'active') {
+    filterFn(todos, todoState){
+        if (todoState == 'active') {
             return todos.filter(todo => todo.completed === false);
-        } else if (this.state.showTodosState == 'completed') {
+        } else if (todoState == 'completed') {
             return todos.filter(todo => todo.completed === true);
         } else {
             return todos;
@@ -50,19 +57,20 @@ class {
     </div>
 
     <div.todo__list>
-        <for(todo in component.filterFn(state.todos))>
+        <for(todo in component.filterFn(state.todos, state.showTodosState))>
             <div.todo__item class="${todo.completed ? 'todo__item--completed' : ''}">
                 <label.todo__item-checkbox>
                     <input type="checkbox"
                            checked=todo.completed
                            on-change("toggleTodoStatus", todo) />
                 </label>
-                <span>${todo.text}</span>
+                <span.todo__item-text>${todo.text}</span>
             </div>
         </for>
     </div>
     <div.todo__footer>
-        <div.todo__count>${state.todos.length} ${state.todos.length === 1 ? 'item' : 'items'} left</div>
+        $ var todosLeft = component.filterFn(state.todos, 'active').length;
+        <div.todo__count>${todosLeft} ${todosLeft === 1 ? 'item' : 'items'} left</div>
         <div.todo__filters>
             <span.todo__filter-btn on-click("setShowTodosState", "all")>All</span>
             <span.todo__filter-btn on-click("setShowTodosState", "active")>Active</span>
@@ -139,8 +147,10 @@ style.scss {
             border-top: 1px solid $color-light-gray;
 
             &--completed {
-                text-decoration: line-through;
-                color: $color-light-gray;
+                .todo__item-text {
+                    text-decoration: line-through;
+                    color: $color-light-gray;
+                }
 
                 .todo__item-checkbox {
                     background-image: url('/assets/svg/todo-complete.svg');
